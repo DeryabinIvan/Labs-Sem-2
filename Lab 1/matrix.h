@@ -4,11 +4,13 @@
 #include <memory.h>
 
 typedef struct m{
-	float **data;
+	int **data;
 	int size;
 } matrix;
 
-void create_matrix(matrix *m, float val);
+void create_matrix(matrix *m, int val);
+
+void fill_random(matrix* m);
 
 void destroy_matrix(matrix *m);
 
@@ -18,3 +20,4 @@ int read_from_file(FILE *f, matrix *m);
 
 void print_matrix(matrix *m);
 
+long determinant(matrix *m);
