@@ -44,6 +44,9 @@ void addPart(snake* s);
 //получить направление движения
 int getHeadDirection(snake* s);
 
+//проверяет существует ли часть змейки с данными координатами
+int existInParts(snake* s, int x, int y);
+
 //"тик" движения
 int moveSnake(snake* s, field* f, int dir);
 

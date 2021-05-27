@@ -75,6 +75,16 @@ int getHeadDirection(snake* s) {
 	return s->parts[0].direction;
 }
 
+int existInParts(snake* s, int x, int y) {
+	for (int i = 0; i < s->length; i++) {
+		if (s->parts[i].coord.x == x &&
+			s->parts[i].coord.y == y)
+			return 1;
+	}
+
+	return 0;
+}
+
 int findInterception(snake* s) {
 	for (int j = 1; j < s->length; j++) {
 		if (s->parts[0].coord.x == s->parts[j].coord.x &&
@@ -140,7 +150,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 	} else {
 		removeFood(f, head->coord.x, head->coord.y);
 		addPart(s);
-		addFood(f);
+		addFood(f, s);
 	}
 
 	int tmp_dir = NONE;

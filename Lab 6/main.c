@@ -65,6 +65,7 @@ void startGame() {
 
 	snake s;
 	createSnake(&s, &f);
+	addFood(&f, &s);
 
 	printField(&f);
 	printSnake(&s);
@@ -99,6 +100,8 @@ void startGame() {
 
 	deleteField(&f);
 	deleteSnake(&s);
+
+	Sleep(100);
 }
 
 void startAutoMode() {

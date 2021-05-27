@@ -36,9 +36,6 @@ void craeteField(field* f) {
 	for (int i = 0; i < (f->height * f->width * 0.01); i++) {
 		f->data[FIELD_BORDER + rand() % f->height][FIELD_BORDER + rand() % f->width] = WALL;
 	}
-
-	//ставим первую еду
-	addFood(f);
 }
 
 void deleteField(field* f) {
@@ -48,16 +45,15 @@ void deleteField(field* f) {
 	free(f->data);
 }
 
-void addFood(field* f) {
-	while (1) {
-		int x = FIELD_BORDER + rand() % f->height;
-		int y = FIELD_BORDER + rand() % f->width;
+void addFood(field* f, snake* s) {
+	int x, y;
 
-		if (f->data[x][y] == EMPTY) {
-			f->data[x][y] = FOOD;
-			return;
-		}
-	}
+	do {
+		x = FIELD_BORDER + rand() % f->height;
+		y = FIELD_BORDER + rand() % f->width;
+	}while(f->data[x][y] != EMPTY && existInParts(s, x, y));
+	
+	f->data[x][y] = FOOD;
 }
 
 void printField(field* f) {

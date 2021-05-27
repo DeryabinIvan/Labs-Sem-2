@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include "snake.h"
+
 typedef struct f{
 	unsigned char** data;
 	int height, width;
@@ -33,7 +35,7 @@ void craeteField(field* f);
 void deleteField(field* f);
 
 //добавить еду на поле
-void addFood(field* f);
+void addFood(field* f, snake* s);
 
 //вывести поле на экран
 void printField(field* f);
