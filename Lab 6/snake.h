@@ -8,38 +8,38 @@ enum DIRECTION { UP, DOWN, NONE , LEFT, RIGTH};
 
 enum SNAKE_PARTS { HEAD = '@', BODY = 's' };
 
-//структура точки
+//СЃС‚СЂСѓРєС‚СѓСЂР° С‚РѕС‡РєРё
 typedef struct p{
 	int x, y;
 } point;
 
-//часть змейки
+//С‡Р°СЃС‚СЊ Р·РјРµР№РєРё
 typedef struct sp{
 	point coord;
 	unsigned char sym;
 	int direction;
 } snake_part;
 
-//структура змейки
+//СЃС‚СЂСѓРєС‚СѓСЂР° Р·РјРµР№РєРё
 typedef struct s {
 	int length;
 	snake_part* parts;
 } snake;
 
-//создание змейки
+//СЃРѕР·РґР°РЅРёРµ Р·РјРµР№РєРё
 void createSnake(snake* s, field* f);
 
-//удаление змейки
+//СѓРґР°Р»РµРЅРёРµ Р·РјРµР№РєРё
 void deleteSnake(snake* s);
 
-//удлиннение змейки
+//СѓРґР»РёРЅРЅРµРЅРёРµ Р·РјРµР№РєРё
 void addPart(snake* s);
 
-//получить направление движения
+//РїРѕР»СѓС‡РёС‚СЊ РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ
 int getHeadDirection(snake* s);
 
-//"тик" движения
+//"С‚РёРє" РґРІРёР¶РµРЅРёСЏ
 int moveSnake(snake* s, field* f, int dir);
 
-//вывести змейку на экран
+//РІС‹РІРµСЃС‚Рё Р·РјРµР№РєСѓ РЅР° СЌРєСЂР°РЅ
 void printSnake(snake* s);

@@ -106,7 +106,7 @@ void movePart(snake_part* part){
 }
 
 int moveSnake(snake* s, field* f, int new_dir) {
-	//двигаем голову...
+	//РґРІРёРіР°РµРј РіРѕР»РѕРІСѓ...
 	snake_part* head = s->parts;
 	int current_dir = head->direction;
 
@@ -116,11 +116,11 @@ int moveSnake(snake* s, field* f, int new_dir) {
 
 	movePart(head);
 
-	//...и проверяем
+	//...Рё РїСЂРѕРІРµСЂСЏРµРј
 	int cell_type = getXYType(f, head->coord.x, head->coord.y);
 
 	if (cell_type != FOOD) {
-		//...на пересечения со стеной
+		//...РЅР° РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЃРѕ СЃС‚РµРЅРѕР№
 		switch (cell_type) {
 			case BORDER_TL:
 			case BORDER_DL:
@@ -138,7 +138,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 				return 0;
 		}
 
-		//...или с собой
+		//...РёР»Рё СЃ СЃРѕР±РѕР№
 		if (findInterception(s)) {
 			printf("Interceptions not allowed!\n");
 			return 0;
@@ -147,7 +147,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 
 	int tmp_dir = NONE;
 
-	//двигаем остальные части змейки
+	//РґРІРёРіР°РµРј РѕСЃС‚Р°Р»СЊРЅС‹Рµ С‡Р°СЃС‚Рё Р·РјРµР№РєРё
 	for (int i = 1; i < s->length; i++) {
 		snake_part* part = s->parts + i;
 
@@ -164,7 +164,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 		addFood(f);
 	}
 
-	//меняем направление хвоста
+	//РјРµРЅСЏРµРј РЅР°РїСЂР°РІР»РµРЅРёРµ С…РІРѕСЃС‚Р°
 	snake_part* tail = s->parts + (s->length - 1);
 	switch (tail->direction) {
 		case UP:

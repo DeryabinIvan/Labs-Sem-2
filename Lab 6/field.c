@@ -32,12 +32,12 @@ void craeteField(field* f) {
 	f->data[0][f->width + FIELD_BORDER] = BORDER_DR;
 	f->data[f->height + FIELD_BORDER][f->width + FIELD_BORDER] = BORDER_TR;
 
-	//заполняем поле препятсвиями
+	//Р·Р°РїРѕР»РЅСЏРµРј РїРѕР»Рµ РїСЂРµРїСЏС‚СЃРІРёСЏРјРё
 	for (int i = 0; i < (f->height * f->width * 0.01); i++) {
 		f->data[FIELD_BORDER + rand() % f->height][FIELD_BORDER + rand() % f->width] = WALL;
 	}
 
-	//ставим первую еду
+	//СЃС‚Р°РІРёРј РїРµСЂРІСѓСЋ РµРґСѓ
 	addFood(f);
 }
 
