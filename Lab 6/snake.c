@@ -34,6 +34,26 @@ void deleteSnake(snake* s) {
 	free(s->parts);
 }
 
+void printDirection(int direction) {
+	switch (direction) {
+		case UP:
+			printf("U ");
+			break;
+
+		case DOWN:
+			printf("D ");
+			break;
+
+		case LEFT:
+			printf("L ");
+			break;
+
+		case RIGTH:
+			printf("R ");
+			break;
+	}
+}
+
 void addPart(snake* s) {
 	s->length++;
 
@@ -43,8 +63,8 @@ void addPart(snake* s) {
 	}
 	s->parts = tmp;
 
-	snake_part* new_tail = s->parts + (s->length - 1);
-	snake_part* old_tail = s->parts + (s->length - 2);
+	snake_part* new_tail = &(s->parts[s->length - 1]);
+	snake_part* old_tail = &(s->parts[s->length - 2]);
 	
 	new_tail->direction = old_tail->direction;
 	new_tail->coord.x = old_tail->coord.x;
@@ -54,11 +74,11 @@ void addPart(snake* s) {
 	
 	switch (new_tail->direction) {
 		case UP:
-			new_tail->coord.x--;
+			new_tail->coord.x++;
 			break;
 
 		case DOWN:
-			new_tail->coord.x++;
+			new_tail->coord.x--;
 			break;
 
 		case LEFT:
@@ -130,19 +150,17 @@ int moveSnake(snake* s, field* f, int new_dir) {
 			case BORDER_TOP_DOWN:
 			case WALL:
 			case -1:
-				if (cell_type != -1) {
-					printf("You killed by: %c\n", cell_type);
-				} else {
-					printf("Out of range\n");
-				}
 				return 0;
 		}
 
 		//...или с собой
 		if (findInterception(s)) {
-			printf("Interceptions not allowed!\n");
 			return 0;
 		}
+	} else {
+		removeFood(f, head->coord.x, head->coord.y);
+		addPart(s);
+		addFood(f);
 	}
 
 	int tmp_dir = NONE;
@@ -156,12 +174,6 @@ int moveSnake(snake* s, field* f, int new_dir) {
 		current_dir = tmp_dir;
 
 		movePart(part);
-	}
-
-	if (cell_type == FOOD) {
-		removeFood(f, head->coord.x, head->coord.y);
-		addPart(s);
-		addFood(f);
 	}
 
 	//меняем направление хвоста

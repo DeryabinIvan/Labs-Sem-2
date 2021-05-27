@@ -39,7 +39,20 @@ int main() {
 				return 0;
 		}
 	}
-	return 0;
+}
+
+int getDirection() {
+	if (GetAsyncKeyState(VK_UP) & 1) {
+		return UP;
+	} else if (GetAsyncKeyState(VK_DOWN) & 1) {
+		return DOWN;
+	} else if (GetAsyncKeyState(VK_LEFT) & 1) {
+		return LEFT;
+	} else if (GetAsyncKeyState(VK_RIGHT) & 1) {
+		return RIGTH;
+	}
+
+	return NONE;
 }
 
 void startGame() {
@@ -57,34 +70,24 @@ void startGame() {
 	printSnake(&s);
 
 	HANDLE cli = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD zero_coord;
+	COORD saved_coord;
 
-	zero_coord.X = 0;
-	zero_coord.Y = 0;
+	saved_coord.X = 0;
+	saved_coord.Y = 0;
 
 	int new_direction = NONE,
 		snake_direction = getHeadDirection(&s);
 
 	//игровой цикл
 	do {
-		SetConsoleCursorPosition(cli, zero_coord);
+		SetConsoleCursorPosition(cli, saved_coord);
 
 		printField(&f);
 		printSnake(&s);
 
 		printf("Score: %d\n", s.length);
 
-		if (GetAsyncKeyState(VK_UP) & 1) {
-			new_direction = UP;
-		} else if (GetAsyncKeyState(VK_DOWN) & 1) {
-			new_direction = DOWN;
-		} else if (GetAsyncKeyState(VK_LEFT) & 1) {
-			new_direction = LEFT;
-		} else if (GetAsyncKeyState(VK_RIGHT) & 1) {
-			new_direction = RIGTH;
-		} else {
-			new_direction = NONE;
-		}
+		new_direction = getDirection();
 
 		snake_direction = getHeadDirection(&s);
 		if (abs(snake_direction - new_direction) == 1) {
