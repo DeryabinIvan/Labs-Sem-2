@@ -62,15 +62,37 @@ void startGame() {
 	zero_coord.X = 0;
 	zero_coord.Y = 0;
 
+	int new_direction = NONE,
+		snake_direction = getHeadDirection(&s);
+
 	//игровой цикл
-	while (moveSnake(&s, &f, NONE)) {
+	do {
 		SetConsoleCursorPosition(cli, zero_coord);
 
 		printField(&f);
 		printSnake(&s);
 
-		Sleep(150);
-	}
+		printf("Score: %d\n", s.length);
+
+		if (GetAsyncKeyState(VK_UP) & 1) {
+			new_direction = UP;
+		} else if (GetAsyncKeyState(VK_DOWN) & 1) {
+			new_direction = DOWN;
+		} else if (GetAsyncKeyState(VK_LEFT) & 1) {
+			new_direction = LEFT;
+		} else if (GetAsyncKeyState(VK_RIGHT) & 1) {
+			new_direction = RIGTH;
+		} else {
+			new_direction = NONE;
+		}
+
+		snake_direction = getHeadDirection(&s);
+		if (abs(snake_direction - new_direction) == 1) {
+			new_direction = NONE;
+		}
+
+		Sleep(100);
+	}while (moveSnake(&s, &f, new_direction));
 
 	deleteField(&f);
 	deleteSnake(&s);

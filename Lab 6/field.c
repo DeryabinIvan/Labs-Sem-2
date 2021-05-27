@@ -33,7 +33,7 @@ void craeteField(field* f) {
 	f->data[f->height + FIELD_BORDER][f->width + FIELD_BORDER] = BORDER_TR;
 
 	//заполняем поле препятсвиями
-	for (int i = 0; i < (f->height * f->width * 0.05); i++) {
+	for (int i = 0; i < (f->height * f->width * 0.01); i++) {
 		f->data[FIELD_BORDER + rand() % f->height][FIELD_BORDER + rand() % f->width] = WALL;
 	}
 
@@ -67,8 +67,12 @@ void printField(field* f) {
 }
 
 int getXYType(field* f, int x, int y) {
-	if (x < 0 || y < 0 || x > f->height || y > f->width) {
+	if (x < -1 || y < -1 || x > f->height || y > f->width) {
 		return -1;
 	}
 	return f->data[x + FIELD_BORDER][y + FIELD_BORDER];
+}
+
+void removeFood(field* f, int x, int y) {
+	f->data[x + FIELD_BORDER][y + FIELD_BORDER] = EMPTY;
 }
