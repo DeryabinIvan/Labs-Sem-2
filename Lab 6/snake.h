@@ -6,7 +6,13 @@
 
 enum DIRECTION { UP, DOWN, NONE , LEFT, RIGTH};
 
-enum SNAKE_PARTS { HEAD = '@', BODY = 's' };
+enum SNAKE_PARTS {
+	HEAD = '@',
+	BODY = 's',
+
+	BODY_U_OR_D = 179,
+	BODY_L_OR_R = 196,
+};
 
 //структура точки
 typedef struct p{

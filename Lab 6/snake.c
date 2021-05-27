@@ -34,26 +34,6 @@ void deleteSnake(snake* s) {
 	free(s->parts);
 }
 
-void printDirection(int direction) {
-	switch (direction) {
-		case UP:
-			printf("U ");
-			break;
-
-		case DOWN:
-			printf("D ");
-			break;
-
-		case LEFT:
-			printf("L ");
-			break;
-
-		case RIGTH:
-			printf("R ");
-			break;
-	}
-}
-
 void addPart(snake* s) {
 	s->length++;
 
@@ -63,8 +43,8 @@ void addPart(snake* s) {
 	}
 	s->parts = tmp;
 
-	snake_part* new_tail = &(s->parts[s->length - 1]);
-	snake_part* old_tail = &(s->parts[s->length - 2]);
+	snake_part* new_tail = s->parts + (s->length - 1);
+	snake_part* old_tail = s->parts + (s->length - 2);
 	
 	new_tail->direction = old_tail->direction;
 	new_tail->coord.x = old_tail->coord.x;
@@ -174,6 +154,47 @@ int moveSnake(snake* s, field* f, int new_dir) {
 		current_dir = tmp_dir;
 
 		movePart(part);
+	}
+
+	//меняем змейку
+	snake_part *prev, *curr;
+	for (int i = 1; i < s->length-1; i++) {
+		prev = s->parts + (i - 1);
+		curr = s->parts + i;
+
+		if (prev->direction == curr->direction) {
+			if (prev->direction == UP || prev->direction == DOWN) {
+				curr->sym = BODY_U_OR_D;
+			} else {
+				curr->sym = BODY_L_OR_R;
+			}
+		} else {
+			if (prev->direction == LEFT) {
+				if (curr->direction == DOWN) {
+					curr->sym = 217;
+				} else {
+					curr->sym = 191;
+				}
+			} else if (prev->direction == RIGTH) {
+				if (curr->direction == DOWN) {
+					curr->sym = 192;
+				} else {
+					curr->sym = 218;
+				}
+			} else if (prev->direction == DOWN) {
+				if (curr->direction == LEFT) {
+					curr->sym = 218;
+				} else {
+					curr->sym = 191;
+				}
+			} else {
+				if (curr->direction == RIGTH) {
+					curr->sym = 217;
+				} else {
+					curr->sym = 192;
+				}
+			}
+		}
 	}
 
 	//меняем направление хвоста
