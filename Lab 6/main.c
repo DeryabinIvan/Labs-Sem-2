@@ -125,6 +125,26 @@ void startGame() {
 	Sleep(100);
 }
 
+void printPath(int* path, int path_len) {
+	for (int i = 0; i < path_len; i++) {
+		switch (path[i]) {
+			case UP:
+				printf("U ");
+				break;
+			case DOWN:
+				printf("D ");
+				break;
+			case LEFT:
+				printf("L ");
+				break;
+			case RIGTH:
+				printf("R ");
+				break;
+		}
+	}
+	printf("\n");
+}
+
 void startAutoMode() {
 	srand((unsigned int) time(0));
 
@@ -170,6 +190,7 @@ void startAutoMode() {
 			printSnake(&s);
 
 			printf("Score: %d\n", s.length);
+			printPath(path+i, 1);
 
 			Sleep(100);
 
@@ -181,6 +202,7 @@ void startAutoMode() {
 		if (status == 2) {
 			addFood(&f, &s);
 		} else if (status == 0) {
+			printPath(path, path_len);
 			break;
 		}
 	}

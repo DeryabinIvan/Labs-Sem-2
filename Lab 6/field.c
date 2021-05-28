@@ -1,7 +1,12 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include "field.h"
 
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 const int FIELD_BORDER = 1, SAVE_ZONE = 3;
 
@@ -46,9 +51,7 @@ void deleteField(field* f) {
 	}
 
 	for (int i = 0; i < f->height + 2 * FIELD_BORDER; i++) {
-		if (f->data[i] != NULL) {
-			free(f->data[i]);
-		}
+		free(f->data[i]);
 	}
 
 	free(f->data);

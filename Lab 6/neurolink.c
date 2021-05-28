@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include "neurolink.h"
 
 #include <stdio.h>
@@ -93,6 +97,9 @@ int* calculatePath(field* f, snake* s, POINT start, POINT finish, int* path_len)
 	*path_len = imaginaryNumbersSpace[x][y];
 	
 	int* path = (int*) malloc(*path_len * sizeof(int));
+	if (path == NULL) {
+		exit(-1);
+	}
 
 	//развертка пути от финиша к старту
 	for (int i = 0; i < *path_len; i++) {
