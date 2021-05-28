@@ -1,35 +1,54 @@
 #include "neurolink.h"
 
 #include <stdio.h>
+#include <windows.h>
 
 int** imaginaryNumbersSpace;
 
 int max_h, max_w;
 
 void fill_space(int x, int y, int len) {
-	if (imaginaryNumbersSpace[x][y] == -2 || 
-		x + 1 >= max_h || y + 1 >= max_w ||
-		x - 1 < 0 || y - 1 < 0) {
-		return;
-	}
-
+	//нашли еду
 	if (imaginaryNumbersSpace[x][y] == -1) {
 		imaginaryNumbersSpace[x][y] = len;
 		return;
 	}
 
-	if (imaginaryNumbersSpace[x + 1][y] == 0) {
-		imaginaryNumbersSpace[x + 1][y] = len;
-		fill_space(x + 1, y, len+1);
-	} else if (imaginaryNumbersSpace[x - 1][y] == 0) {
-		imaginaryNumbersSpace[x - 1][y] = len;
-		fill_space(x - 1, y, len + 1);
-	} else if (imaginaryNumbersSpace[x][y + 1] == 0) {
-		imaginaryNumbersSpace[x][y + 1] = len;
-		fill_space(x, y + 1, len + 1);
-	} else if (imaginaryNumbersSpace[x][y - 1] == 0) {
-		imaginaryNumbersSpace[x][y] = len;
-		fill_space(x, y - 1, len + 1);
+	//наткнулис на стену
+	if (imaginaryNumbersSpace[x][y] == -2) {
+		return;
+	}
+
+	if (x + 1 < max_h) {
+		if (imaginaryNumbersSpace[x + 1][y] <= 0 ||
+			imaginaryNumbersSpace[x + 1][y] > len  ) {
+			imaginaryNumbersSpace[x + 1][y] = len;
+			fill_space(x + 1, y, len + 1);
+		}
+	}
+
+	if (x > 0) {
+		if (imaginaryNumbersSpace[x - 1][y] <= 0 ||
+			imaginaryNumbersSpace[x - 1][y] > len  ) {
+			imaginaryNumbersSpace[x - 1][y] = len;
+			fill_space(x - 1, y, len + 1);
+		}
+	}
+
+	if (y + 1 < max_w) {
+		if (imaginaryNumbersSpace[x][y + 1] <= 0 ||
+			imaginaryNumbersSpace[x][y + 1] > len  ) {
+			imaginaryNumbersSpace[x][y + 1] = len;
+			fill_space(x, y + 1, len + 1);
+		}
+	}
+
+	if (y > 0) {
+		if (imaginaryNumbersSpace[x][y - 1] <= 0 ||
+			imaginaryNumbersSpace[x][y - 1] > len  ) {
+			imaginaryNumbersSpace[x][y] = len;
+			fill_space(x, y - 1, len + 1);
+		}
 	}
 }
 
@@ -64,7 +83,7 @@ int* calculatePath(field* f, snake* s, POINT start, POINT finish, int* path_len)
 
 	//начало волнового алгоритма
 	//заполняем поле
-	fill_space(start.x, start.y, 0);
+	fill_space(start.x, start.y, 1);
 
 	for (int i = 0; i < f->height; i++) {
 		for (int j = 0; j < f->width; j++) {
