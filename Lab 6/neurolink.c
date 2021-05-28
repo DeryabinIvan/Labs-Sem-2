@@ -100,15 +100,15 @@ int* calculatePath(field* f, snake* s, POINT start, POINT finish, int* path_len)
 	//развертка пути от финиша к старту
 	for (int i = 0; i < *path_len; i++) {
 		if (imaginaryNumbersSpace[x + 1][y] < imaginaryNumbersSpace[x][y]) {
-			path[i] = UP;
+			path[*path_len - i - 1] = UP;
 		} else if (imaginaryNumbersSpace[x - 1][y] < imaginaryNumbersSpace[x][y]) {
-			path[i] = DOWN;
+			path[*path_len - i - 1] = DOWN;
 		} else if (imaginaryNumbersSpace[x][y + 1] < imaginaryNumbersSpace[x][y]) {
-			path[i] = LEFT;
+			path[*path_len - i - 1] = LEFT;
 		} else if (imaginaryNumbersSpace[x][y - 1] < imaginaryNumbersSpace[x][y]) {
-			path[i] = RIGTH;
+			path[*path_len - i - 1] = RIGTH;
 		} else {
-			path[i] = NONE;
+			path[*path_len - i - 1] = NONE;
 		}
 	}
 
