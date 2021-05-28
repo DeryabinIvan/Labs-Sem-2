@@ -149,6 +149,7 @@ void startAutoMode() {
 	int new_direction = NONE, snake_direction = NONE;
 
 	int status = 1;
+	int path_len = 0;
 
 	//игровой цикл
 	do {
@@ -158,19 +159,26 @@ void startAutoMode() {
 			addFood(&f, &s);
 		}
 
-		printField(&f);
-		printSnake(&s);
+		int* path = calculatePath(&f, &s, getHeadCoord(&s), f.food, &path_len);
+		for (int i = 0; i < path_len; i++) {
+			new_direction = path[i];
 
-		printf("Score: %d\n", s.length);
+			snake_direction = getHeadDirection(&s);
+			if (abs(snake_direction - new_direction) == 1) {
+				new_direction = NONE;
+			}
 
-		new_direction = calculatePath(getHeadDirection(&s), getHeadCoord(&s), &f, f.food);
+			status = moveSnake(&s, &f, new_direction);
 
-		snake_direction = getHeadDirection(&s);
-		if (abs(snake_direction - new_direction) == 1) {
-			new_direction = NONE;
+			SetConsoleCursorPosition(cli, saved_coord);
+
+			printField(&f);
+			printSnake(&s);
+
+			printf("Score: %d\n", s.length);
+			
+			Sleep(100);
 		}
-
-		Sleep(100);
 	} while (status = moveSnake(&s, &f, new_direction));
 
 	deleteField(&f);
