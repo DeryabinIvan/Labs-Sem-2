@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include <windows.h>
 
 #include "field.h"
 
@@ -8,20 +9,15 @@ enum DIRECTION { UP, DOWN, NONE , LEFT, RIGTH};
 
 enum SNAKE_PARTS {
 	HEAD = '@',
-	BODY = 's',
 
 	BODY_U_OR_D = 179,
 	BODY_L_OR_R = 196,
 };
 
-//структура точки
-typedef struct p{
-	int x, y;
-} point;
-
 //часть змейки
 typedef struct sp{
-	point coord;
+	POINT coord;
+
 	unsigned char sym;
 	int direction;
 } snake_part;
@@ -43,6 +39,8 @@ void addPart(snake* s);
 
 //получить направление движения
 int getHeadDirection(snake* s);
+
+POINT getHeadCoord(snake* s);
 
 //проверяет существует ли часть змейки с данными координатами
 int existInParts(snake* s, int x, int y);

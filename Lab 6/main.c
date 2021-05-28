@@ -1,10 +1,11 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
+#include <time.h>
 #include <windows.h>
 
 #include "field.h"
 #include "snake.h"
+#include "neurolink.h"
 
 enum MENU{START=1, AUTO, HELP, EXIT};
 
@@ -55,8 +56,23 @@ int getDirection() {
 	return NONE;
 }
 
+void addFood(field* f, snake* s) {
+	int x, y;
+
+	do {
+		x = 1 + rand() % f->height;
+		y = 1 + rand() % f->width;
+	} while (f->data[x][y] != EMPTY && existInParts(s, x, y));
+
+	f->data[x][y] = FOOD;
+	
+	//для поиска пути
+	f->food.x = x;
+	f->food.y = y;
+}
+
 void startGame() {
-	srand(time(0));
+	srand((unsigned int) time(0));
 
 	field f;
 	f.height = 20;
@@ -76,12 +92,17 @@ void startGame() {
 	saved_coord.X = 0;
 	saved_coord.Y = 0;
 
-	int new_direction = NONE,
-		snake_direction = getHeadDirection(&s);
+	int new_direction = NONE, snake_direction = NONE;
+
+	int status = 1;
 
 	//игровой цикл
 	do {
 		SetConsoleCursorPosition(cli, saved_coord);
+
+		if (status == 2) {
+			addFood(&f, &s);
+		}
 
 		printField(&f);
 		printSnake(&s);
@@ -96,7 +117,7 @@ void startGame() {
 		}
 
 		Sleep(100);
-	}while (moveSnake(&s, &f, new_direction));
+	}while (status = moveSnake(&s, &f, new_direction));
 
 	deleteField(&f);
 	deleteSnake(&s);
@@ -105,5 +126,55 @@ void startGame() {
 }
 
 void startAutoMode() {
+	srand((unsigned int) time(0));
 
+	field f;
+	f.height = 20;
+	f.width = 20;
+	craeteField(&f);
+
+	snake s;
+	createSnake(&s, &f);
+	addFood(&f, &s);
+
+	printField(&f);
+	printSnake(&s);
+
+	HANDLE cli = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD saved_coord;
+
+	saved_coord.X = 0;
+	saved_coord.Y = 0;
+
+	int new_direction = NONE, snake_direction = NONE;
+
+	int status = 1;
+
+	//игровой цикл
+	do {
+		SetConsoleCursorPosition(cli, saved_coord);
+
+		if (status == 2) {
+			addFood(&f, &s);
+		}
+
+		printField(&f);
+		printSnake(&s);
+
+		printf("Score: %d\n", s.length);
+
+		new_direction = calculatePath(getHeadDirection(&s), getHeadCoord(&s), &f, f.food);
+
+		snake_direction = getHeadDirection(&s);
+		if (abs(snake_direction - new_direction) == 1) {
+			new_direction = NONE;
+		}
+
+		Sleep(100);
+	} while (status = moveSnake(&s, &f, new_direction));
+
+	deleteField(&f);
+	deleteSnake(&s);
+
+	Sleep(100);
 }

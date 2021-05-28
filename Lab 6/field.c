@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-const int FIELD_BORDER = 1;
+const int FIELD_BORDER = 1, SAVE_ZONE = 3;
 
 void craeteField(field* f) {
 	f->data = (unsigned char**) malloc((f->height + 2 * FIELD_BORDER) * sizeof(unsigned char*));
@@ -32,28 +32,26 @@ void craeteField(field* f) {
 	f->data[0][f->width + FIELD_BORDER] = BORDER_DR;
 	f->data[f->height + FIELD_BORDER][f->width + FIELD_BORDER] = BORDER_TR;
 
+	const int max_h = f->height - SAVE_ZONE, max_w = f->width - SAVE_ZONE;
+
 	//заполняем поле препятсвиями
-	for (int i = 0; i < (f->height * f->width * 0.01); i++) {
-		f->data[FIELD_BORDER + rand() % f->height][FIELD_BORDER + rand() % f->width] = WALL;
+	for (int i = 0; i < (f->height * f->width * 0.05); i++) {
+		f->data[FIELD_BORDER + SAVE_ZONE + rand() % max_h][FIELD_BORDER + SAVE_ZONE + rand() % max_w] = WALL;
 	}
 }
 
 void deleteField(field* f) {
-	for (int i = 0; i < f->height + 2 * FIELD_BORDER; i++) {
-		free(f->data[i]);
+	if (f == NULL) {
+		return;
 	}
+
+	for (int i = 0; i < f->height + 2 * FIELD_BORDER; i++) {
+		if (f->data[i] != NULL) {
+			free(f->data[i]);
+		}
+	}
+
 	free(f->data);
-}
-
-void addFood(field* f, snake* s) {
-	int x, y;
-
-	do {
-		x = FIELD_BORDER + rand() % f->height;
-		y = FIELD_BORDER + rand() % f->width;
-	}while(f->data[x][y] != EMPTY && existInParts(s, x, y));
-	
-	f->data[x][y] = FOOD;
 }
 
 void printField(field* f) {
@@ -62,7 +60,7 @@ void printField(field* f) {
 	}
 }
 
-int getXYType(field* f, int x, int y) {
+int getCellXY(field* f, int x, int y) {
 	if (x < -1 || y < -1 || x > f->height || y > f->width) {
 		return -1;
 	}

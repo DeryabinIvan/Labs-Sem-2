@@ -141,10 +141,12 @@
   <ItemGroup>
     <ClCompile Include="field.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="neurolink.c" />
     <ClCompile Include="snake.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="field.h" />
+    <ClInclude Include="neurolink.h" />
     <ClInclude Include="snake.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

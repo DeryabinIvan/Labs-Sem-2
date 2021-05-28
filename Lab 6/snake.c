@@ -1,7 +1,3 @@
-// This is a personal academic project. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-
 #include "snake.h"
 
 #include <stdlib.h>
@@ -20,7 +16,7 @@ void createSnake(snake* s, field* f) {
 
 	for (int i = 0; i < s->length; i++) {
 		if(i > 0)
-			s->parts[i].sym = BODY;
+			s->parts[i].sym = BODY_U_OR_D;
 
 		s->parts[i].direction = DOWN;
 		s->parts[i].coord.x = s->length - i - 1;
@@ -31,7 +27,9 @@ void createSnake(snake* s, field* f) {
 }
 
 void deleteSnake(snake* s) {
-	free(s->parts);
+	if (s != NULL) {
+		free(s->parts);
+	}
 }
 
 void addPart(snake* s) {
@@ -50,7 +48,7 @@ void addPart(snake* s) {
 	new_tail->coord.x = old_tail->coord.x;
 	new_tail->coord.y = old_tail->coord.y;
 
-	old_tail->sym = BODY;
+	old_tail->sym = BODY_U_OR_D;
 	
 	switch (new_tail->direction) {
 		case UP:
@@ -75,11 +73,16 @@ int getHeadDirection(snake* s) {
 	return s->parts[0].direction;
 }
 
+POINT getHeadCoord(snake* s) {
+	return s->parts[0].coord;
+}
+
 int existInParts(snake* s, int x, int y) {
 	for (int i = 0; i < s->length; i++) {
 		if (s->parts[i].coord.x == x &&
-			s->parts[i].coord.y == y)
+			s->parts[i].coord.y == y) {
 			return 1;
+		}
 	}
 
 	return 0;
@@ -116,6 +119,8 @@ void movePart(snake_part* part){
 }
 
 int moveSnake(snake* s, field* f, int new_dir) {
+	int status = 1;
+
 	//двигаем голову...
 	snake_part* head = s->parts;
 	int current_dir = head->direction;
@@ -127,7 +132,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 	movePart(head);
 
 	//...и проверяем
-	int cell_type = getXYType(f, head->coord.x, head->coord.y);
+	int cell_type = getCellXY(f, head->coord.x, head->coord.y);
 
 	if (cell_type != FOOD) {
 		//...на пересечения со стеной
@@ -150,7 +155,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 	} else {
 		removeFood(f, head->coord.x, head->coord.y);
 		addPart(s);
-		addFood(f, s);
+		status = 2;
 	}
 
 	int tmp_dir = NONE;
@@ -224,7 +229,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 			break;
 	}
 
-	return 1;
+	return status;
 }
 
 void printSnake(snake* s) {
