@@ -5,7 +5,7 @@
 
 #include "field.h"
 
-enum DIRECTION { UP, DOWN, NONE , LEFT, RIGTH};
+enum DIRECTION { UP = -2, DOWN = 2, NONE = 0, LEFT = 1, RIGTH = -1};
 
 enum SNAKE_PARTS {
 	HEAD = '@',

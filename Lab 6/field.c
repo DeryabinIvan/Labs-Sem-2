@@ -35,7 +35,7 @@ void craeteField(field* f) {
 	const int max_h = f->height - SAVE_ZONE, max_w = f->width - SAVE_ZONE;
 
 	//заполняем поле препятсвиями
-	for (int i = 0; i < (f->height * f->width * 0.05); i++) {
+	for (int i = 0; i < (f->height * f->width * 0.02); i++) {
 		f->data[FIELD_BORDER + SAVE_ZONE + rand() % max_h][FIELD_BORDER + SAVE_ZONE + rand() % max_w] = WALL;
 	}
 }
