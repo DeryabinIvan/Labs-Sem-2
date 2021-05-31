@@ -24,21 +24,27 @@ void printINS(POINT food, POINT head) {
 
 	setCursorPosistion(&cli_coord);
 
-	for (int i = 0; i < height; i++) {
-		for (int j = 0; j < width; j++) {
+	for (int i = 1; i < height - 1; i++) {
+		for (int j = 1; j < width - 1; j++) {
+			//Выделяем цветом для удобства отладки
 			if (imaginaryNumbersSpace[i][j] == WAVE_WALL) {
-				setColor(0, FOREGROUND_RED);
+				setColor(FOREGROUND_RED, FOREGROUND_RED);
 			} else if (i == food.x && j == food.y) {
-				setColor(0, FOREGROUND_GREEN);
+				setColor(BACKGROUND_GREEN, FOREGROUND_GREEN);
+				printf("42\t");
+				setColor(0, FOREGROUND_INTENSITY);
 			} else if (i == head.x && j == head.y) {
-				setColor(0, FOREGROUND_BLUE);
+				setColor(BACKGROUND_BLUE, FOREGROUND_BLUE);
+				printf("42\t");
+				setColor(0, FOREGROUND_INTENSITY);
+				continue;
 			}
 
 			printf("%d\t", imaginaryNumbersSpace[i][j]);
-			setColor(0, FOREGROUND_WHITE);
+			setColor(0, FOREGROUND_INTENSITY);
 		}
 		printf("\n");
-		setColor(0, FOREGROUND_WHITE);
+		setColor(0, FOREGROUND_INTENSITY);
 	}
 }
 
@@ -87,7 +93,7 @@ void fill_space(int x, int y, int len) {
 	}
 }
 
-int calculatePath(field* f, snake* s, POINT start, POINT finish) {
+int calculatePath(field* f, snake* s, POINT start, POINT finish, int debug) {
 	height = f->height + 2;
 	width = f->width + 2;
 
@@ -125,6 +131,9 @@ int calculatePath(field* f, snake* s, POINT start, POINT finish) {
 
 	int x = finish.x, y = finish.y;
 	int path_len = imaginaryNumbersSpace[x][y];
+	if (path_len == -1) {
+		return NONE;
+	}
 	
 	int* path = (int*) malloc(path_len * sizeof(int));
 	if (path == NULL) {
@@ -151,6 +160,9 @@ int calculatePath(field* f, snake* s, POINT start, POINT finish) {
 			y--;
 		}
 	}
+
+	if(debug != 0)
+		printINS(finish, start);
 
 	for (int i = 0; i < height; i++) {
 		free(imaginaryNumbersSpace[i]);

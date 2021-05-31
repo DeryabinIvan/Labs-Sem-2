@@ -7,10 +7,10 @@
 #include "snake.h"
 #include "neurolink.h"
 
-enum MENU{START=1, AUTO, HELP, EXIT};
+enum MENU{START=1, AUTO, AUTO_DEBUG, HELP, EXIT};
 
 void startGame();
-void startAutoMode();
+void startAutoMode(int debug);
 
 int main() {
 	int menu_key;
@@ -19,9 +19,11 @@ int main() {
 		printf("Menu:\
 				\n\t%d) New Game\
 				\n\t%d) Auto mode\
+				\n\t%d) Auto with debug information\
+				\n\t   (use fullscreen to best result) \
 				\n\t%d) Help\
 				\n\t%d) Exit\n", 
-			   START, AUTO, HELP, EXIT);
+			   START, AUTO, AUTO_DEBUG, HELP, EXIT);
 
 		scanf_s("%d", &menu_key);
 		system("cls");
@@ -31,7 +33,10 @@ int main() {
 				startGame();
 				break;
 			case AUTO:
-				startAutoMode();
+				startAutoMode(0);
+				break;
+			case AUTO_DEBUG:
+				startAutoMode(1);
 				break;
 			case HELP:
 				printf("WASD - control; X or ESC-exit\nThat`s all ;)\n");
@@ -157,7 +162,7 @@ void printDirection(int dir) {
 	printf("\n");
 }
 
-void startAutoMode() {
+void startAutoMode(int debug) {
 	srand((unsigned int) time(0));
 
 	disableConsoleCursor();
@@ -187,9 +192,14 @@ void startAutoMode() {
 
 	//игровой цикл
 	while (1) {
-		new_direction = calculatePath(&f, &s, getHeadCoord(&s), f.food);
+		new_direction = calculatePath(&f, &s, getHeadCoord(&s), f.food, debug);
+		if (new_direction == NONE) {
+			printf("Game over! Score: %d\n", s.length);
+			break;
+		}
 
 		snake_direction = getHeadDirection(&s);
+
 		if (snake_direction + new_direction == 0) {
 			new_direction = NONE;
 		}

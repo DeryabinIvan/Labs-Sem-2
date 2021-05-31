@@ -6,4 +6,4 @@
 #include "field.h"
 #include "snake.h"
 
-int calculatePath(field* f, snake* s, POINT start, POINT finish);
+int calculatePath(field* f, snake* s, POINT start, POINT finish, int debug);
