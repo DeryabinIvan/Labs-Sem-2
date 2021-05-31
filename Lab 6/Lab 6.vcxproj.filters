@@ -27,6 +27,9 @@
     <ClCompile Include="neurolink.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cli_graphics.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="field.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="neurolink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cli_graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

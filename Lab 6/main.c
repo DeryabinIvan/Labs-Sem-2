@@ -204,7 +204,7 @@ void startAutoMode() {
 			printSnake(&s);
 
 			printf("Score: %d\n", s.length);
-			printPath(path+i, 1);
+			printPath(path, path_len);
 
 			Sleep(100);
 
@@ -216,7 +216,6 @@ void startAutoMode() {
 		if (status == 2) {
 			addFood(&f, &s);
 		} else if (status == 0) {
-			printPath(path, path_len);
 			break;
 		}
 	}

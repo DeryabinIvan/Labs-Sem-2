@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <windows.h>
 
+#include "cli_graphics.h"
+
 void createSnake(snake* s, field* f) {
 	s->length = 3;
 
@@ -23,8 +25,8 @@ void createSnake(snake* s, field* f) {
 			s->parts[i].sym = BODY_U_OR_D;
 
 		s->parts[i].direction = DOWN;
-		s->parts[i].coord.x = s->length - i - 1;
-		s->parts[i].coord.y = 0;
+		s->parts[i].coord.x = s->length - i;
+		s->parts[i].coord.y = 1;
 	}
 
 	s->parts[s->length - 1].sym = '^';
@@ -238,24 +240,19 @@ int moveSnake(snake* s, field* f, int new_dir) {
 
 void printSnake(snake* s) {
 	HANDLE cli =  GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD cli_coord, saved_coord;
+	POINT cli_coord, saved_coord;
 
-	CONSOLE_SCREEN_BUFFER_INFO cbi;
-	GetConsoleScreenBufferInfo(cli, &cbi);
-	saved_coord = cbi.dwCursorPosition;
+	saved_coord = getCursorPosistion();
 
-	cli_coord.X = 0;
-	cli_coord.Y = 0;
-
-	SetConsoleCursorPosition(cli, cli_coord);
+	setCursorPosistion(&cli_coord);
 
 	for (int i = 0; i < s->length; i++) {
-		cli_coord.X = s->parts[i].coord.y + 1;
-		cli_coord.Y = s->parts[i].coord.x + 1;
+		cli_coord.x = s->parts[i].coord.y;
+		cli_coord.y = s->parts[i].coord.x;
 
-		SetConsoleCursorPosition(cli, cli_coord);
+		setCursorPosistion(&cli_coord);
 		printf("%c", s->parts[i].sym);
 	}
 
-	SetConsoleCursorPosition(cli, saved_coord);
+	setCursorPosistion(&saved_coord);
 }

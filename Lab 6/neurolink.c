@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <windows.h>
 
+#include "cli_graphics.h"
+
 int** imaginaryNumbersSpace;
 
 int height, width;
@@ -14,27 +16,30 @@ int max_value;
 
 #define WAVE_WALL -5
 
-void printINS() {
-	HANDLE cli = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD cli_coord, saved_coord;
+void printINS(POINT food, POINT head) {
+	POINT cli_coord;
 
-	CONSOLE_SCREEN_BUFFER_INFO cbi;
-	GetConsoleScreenBufferInfo(cli, &cbi);
-	saved_coord = cbi.dwCursorPosition;
+	cli_coord.x = 0;
+	cli_coord.y = 29;
 
-	cli_coord.X = 0;
-	cli_coord.Y = 20;
-
-	SetConsoleCursorPosition(cli, cli_coord);
+	setCursorPosistion(&cli_coord);
 
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
+			if (imaginaryNumbersSpace[i][j] == WAVE_WALL) {
+				setColor(0, FOREGROUND_RED);
+			} else if (i == food.x && j == food.y) {
+				setColor(0, FOREGROUND_GREEN);
+			} else if (i == head.x && j == head.y) {
+				setColor(0, FOREGROUND_BLUE);
+			}
+
 			printf("%d\t", imaginaryNumbersSpace[i][j]);
+			setColor(0, FOREGROUND_WHITE);
 		}
 		printf("\n");
+		setColor(0, FOREGROUND_WHITE);
 	}
-
-	//SetConsoleCursorPosition(cli, saved_coord);
 }
 
 void fill_space(int x, int y, int len) {
@@ -83,14 +88,11 @@ void fill_space(int x, int y, int len) {
 }
 
 int* calculatePath(field* f, snake* s, POINT start, POINT finish, int* path_len) {
-	height = f->height + 1;
-	width = f->width + 1;
+	height = f->height + 2;
+	width = f->width + 2;
 
-	max_value = height * width;
-	start.x++;
-	start.y++;
+	max_value = (height - 2) * (width - 2);
 
-	//инициализаци€ волнового алгоритма
 	imaginaryNumbersSpace = (int**) malloc(height * sizeof(int*));
 	if (imaginaryNumbersSpace == NULL) {
 		exit(-1);
@@ -103,13 +105,14 @@ int* calculatePath(field* f, snake* s, POINT start, POINT finish, int* path_len)
 		}
 	}
 
+	//инициализаци€ волнового алгоритма
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			if (f->data[i + 1][j + 1] == WALL || existInParts(s, i, j)) {
+			if (f->data[i][j] == EMPTY && !existInParts(s, i, j)) {
+				imaginaryNumbersSpace[i][j] = max_value;
+			} else {
 				//стена или часть змейки это недос€гаемые области
 				imaginaryNumbersSpace[i][j] = WAVE_WALL;
-			} else {
-				imaginaryNumbersSpace[i][j] = max_value;
 			}
 		}
 	}
@@ -149,7 +152,7 @@ int* calculatePath(field* f, snake* s, POINT start, POINT finish, int* path_len)
 		}
 	}
 
-	printINS();
+	printINS(finish, start);
 
 	for (int i = 0; i < height; i++) {
 		free(imaginaryNumbersSpace[i]);

@@ -139,12 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cli_graphics.c" />
     <ClCompile Include="field.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="neurolink.c" />
     <ClCompile Include="snake.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cli_graphics.h" />
     <ClInclude Include="field.h" />
     <ClInclude Include="neurolink.h" />
     <ClInclude Include="snake.h" />

@@ -8,6 +8,8 @@
 #include <time.h>
 #include <stdio.h>
 
+#include "cli_graphics.h"
+
 const int FIELD_BORDER = 1, SAVE_ZONE = 3;
 
 void craeteField(field* f) {
@@ -17,7 +19,7 @@ void craeteField(field* f) {
 	}
 
 	for (int i = 0; i < f->width + 2 * FIELD_BORDER; i++) {
-		f->data[i] = (unsigned char*) calloc((f->width + 2 * FIELD_BORDER + 1), sizeof(unsigned char));
+		f->data[i] = (unsigned char*) calloc((f->width + 2 * FIELD_BORDER), sizeof(unsigned char));
 		if (f->data[i] == NULL) {
 			exit(-1);
 		}
@@ -30,7 +32,6 @@ void craeteField(field* f) {
 
 		f->data[i][0] = BORDER_LEFT_RIGTH;
 		f->data[i][f->width + FIELD_BORDER] = BORDER_LEFT_RIGTH;
-		f->data[i][f->width + FIELD_BORDER + 1] = '\0';
 	}
 	f->data[0][0] = BORDER_TL;
 	f->data[f->height + FIELD_BORDER][0] = BORDER_DL;
@@ -59,7 +60,17 @@ void deleteField(field* f) {
 
 void printField(field* f) {
 	for (int i = 0; i < f->height + FIELD_BORDER * 2; i++) {
-		printf("%s\n", f->data[i]);
+		for (int j = 0; j < f->height + FIELD_BORDER * 2; j++) {
+			if (f->food.x == i && f->food.y == j) {
+				setColor(0, FOREGROUND_GREEN);
+			} else if (f->data[i][j] == WALL) {
+				setColor(0, FOREGROUND_RED);
+			}
+
+			printf("%c", f->data[i][j]);
+			setColor(0, FOREGROUND_WHITE);
+		}
+		printf("\n");
 	}
 }
 
