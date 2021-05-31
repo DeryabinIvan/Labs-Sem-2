@@ -56,6 +56,16 @@ int getDirection() {
 	return NONE;
 }
 
+void disableConsoleCursor() {
+	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_CURSOR_INFO cursorInfo;
+
+	GetConsoleCursorInfo(out, &cursorInfo);
+	cursorInfo.bVisible = 0;
+	SetConsoleCursorInfo(out, &cursorInfo);
+}
+
 void addFood(field* f, snake* s) {
 	int x, y;
 
@@ -73,6 +83,8 @@ void addFood(field* f, snake* s) {
 
 void startGame() {
 	srand((unsigned int) time(0));
+
+	disableConsoleCursor();
 
 	field f;
 	f.height = 20;
@@ -148,6 +160,8 @@ void printPath(int* path, int path_len) {
 void startAutoMode() {
 	srand((unsigned int) time(0));
 
+	disableConsoleCursor();
+
 	field f;
 	f.height = 20;
 	f.width = 20;
@@ -194,7 +208,7 @@ void startAutoMode() {
 
 			Sleep(100);
 
-			if (status == 2) {
+			if (status == 2 || status == 0) {
 				break;
 			}
 		}
