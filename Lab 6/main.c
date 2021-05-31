@@ -61,6 +61,10 @@ int getDirection() {
 	return NONE;
 }
 
+int checkDirection(int snake_dir, int new_dir) {
+	return (snake_dir + new_dir) == 0;
+}
+
 void disableConsoleCursor() {
 	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -72,18 +76,18 @@ void disableConsoleCursor() {
 }
 
 void addFood(field* f, snake* s) {
-	int x, y;
+	POINT food;
 
 	do {
-		x = 1 + rand() % f->height;
-		y = 1 + rand() % f->width;
-	} while (f->data[x][y] != EMPTY && existInParts(s, x, y));
+		food.x = 1 + rand() % f->height;
+		food.y = 1 + rand() % f->width;
+	} while (f->data[food.x][food.y] != EMPTY || existInParts(s, food.x, food.y) ||
+			 (calculatePath(f, s, getHeadCoord(s), food, 0) == NONE));
 
-	f->data[x][y] = FOOD;
+	f->data[food.x][food.y] = FOOD;
 	
 	//для поиска пути
-	f->food.x = x;
-	f->food.y = y;
+	f->food = food;
 }
 
 void startGame() {
@@ -129,7 +133,7 @@ void startGame() {
 		new_direction = getDirection();
 
 		snake_direction = getHeadDirection(&s);
-		if (abs(snake_direction - new_direction) == 1) {
+		if (checkDirection(snake_direction, new_direction)) {
 			new_direction = NONE;
 		}
 
@@ -200,7 +204,7 @@ void startAutoMode(int debug) {
 
 		snake_direction = getHeadDirection(&s);
 
-		if (snake_direction + new_direction == 0) {
+		if (checkDirection(snake_direction, new_direction)) {
 			new_direction = NONE;
 		}
 
