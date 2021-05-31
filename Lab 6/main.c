@@ -75,12 +75,19 @@ void disableConsoleCursor() {
 	SetConsoleCursorInfo(out, &cursorInfo);
 }
 
-void addFood(field* f, snake* s) {
+int addFood(field* f, snake* s) {
 	POINT food;
+
+	int counter = 0;
 
 	do {
 		food.x = 1 + rand() % f->height;
 		food.y = 1 + rand() % f->width;
+
+		counter++;
+		if (counter == 2000) {
+			return 0;
+		}
 	} while (f->data[food.x][food.y] != EMPTY || existInParts(s, food.x, food.y) ||
 			 (calculatePath(f, s, getHeadCoord(s), food, 0) == NONE));
 
@@ -121,10 +128,6 @@ void startGame() {
 	do {
 		SetConsoleCursorPosition(cli, saved_coord);
 
-		if (status == 2) {
-			addFood(&f, &s);
-		}
-
 		printField(&f);
 		printSnake(&s);
 
@@ -135,6 +138,13 @@ void startGame() {
 		snake_direction = getHeadDirection(&s);
 		if (checkDirection(snake_direction, new_direction)) {
 			new_direction = NONE;
+		}
+
+		if (status == 2) {
+			if (!addFood(&f, &s)) {
+				printf("Game over!\n");
+				break;
+			}
 		}
 
 		Sleep(100);
@@ -219,7 +229,10 @@ void startAutoMode(int debug) {
 		printDirection(new_direction);
 
 		if (status == 2) {
-			addFood(&f, &s);
+			if (!addFood(&f, &s)) {
+				printf("Game over!\n");
+				break;
+			}
 		} else if (status == 0) {
 			break;
 		}
