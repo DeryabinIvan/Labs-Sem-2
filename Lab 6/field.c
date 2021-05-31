@@ -75,12 +75,9 @@ void printField(field* f) {
 }
 
 int getCellXY(field* f, int x, int y) {
-	if (x < -1 || y < -1 || x > f->height || y > f->width) {
-		return -1;
-	}
-	return f->data[x + FIELD_BORDER][y + FIELD_BORDER];
+	return f->data[x][y];
 }
 
-void removeFood(field* f, int x, int y) {
-	f->data[x + FIELD_BORDER][y + FIELD_BORDER] = EMPTY;
+void removeFood(field* f) {
+	f->data[f->food.x][f->food.y] = EMPTY;
 }

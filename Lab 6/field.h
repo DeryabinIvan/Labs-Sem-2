@@ -44,4 +44,4 @@ void printField(field* f);
 int getCellXY(field* f, int x, int y);
 
 //убрать еду с поля
-void removeFood(field* f, int x, int y);
+void removeFood(field* f);

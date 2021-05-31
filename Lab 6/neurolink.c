@@ -87,7 +87,7 @@ void fill_space(int x, int y, int len) {
 	}
 }
 
-int* calculatePath(field* f, snake* s, POINT start, POINT finish, int* path_len) {
+int calculatePath(field* f, snake* s, POINT start, POINT finish) {
 	height = f->height + 2;
 	width = f->width + 2;
 
@@ -124,40 +124,38 @@ int* calculatePath(field* f, snake* s, POINT start, POINT finish, int* path_len)
 	fill_space(start.x, start.y, 1);
 
 	int x = finish.x, y = finish.y;
-	*path_len = imaginaryNumbersSpace[x][y];
+	int path_len = imaginaryNumbersSpace[x][y];
 	
-	int* path = (int*) malloc(*path_len * sizeof(int));
+	int* path = (int*) malloc(path_len * sizeof(int));
 	if (path == NULL) {
 		exit(-1);
 	}
 
 	//развертка пути от финиша к старту
-	for (int i = 0; i < *path_len; i++) {
+	for (int i = 0; i < path_len; i++) {
 		if (imaginaryNumbersSpace[x + 1][y] < imaginaryNumbersSpace[x][y] &&
 			imaginaryNumbersSpace[x + 1][y] != WAVE_WALL) {
-			path[*path_len - i - 1] = UP;
+			path[path_len - i - 1] = UP;
 			x++;
 		} else if (imaginaryNumbersSpace[x - 1][y] < imaginaryNumbersSpace[x][y] &&
 				   imaginaryNumbersSpace[x - 1][y] != WAVE_WALL) {
-			path[*path_len - i - 1] = DOWN;
+			path[path_len - i - 1] = DOWN;
 			x--;
 		} else if (imaginaryNumbersSpace[x][y + 1] < imaginaryNumbersSpace[x][y] &&
 				   imaginaryNumbersSpace[x][y + 1] != WAVE_WALL) {
-			path[*path_len - i - 1] = LEFT;
+			path[path_len - i - 1] = LEFT;
 			y++;
 		} else if (imaginaryNumbersSpace[x][y - 1] < imaginaryNumbersSpace[x][y] &&
 				   imaginaryNumbersSpace[x][y - 1] != WAVE_WALL) {
-			path[*path_len - i - 1] = RIGTH;
+			path[path_len - i - 1] = RIGTH;
 			y--;
 		}
 	}
-
-	printINS(finish, start);
 
 	for (int i = 0; i < height; i++) {
 		free(imaginaryNumbersSpace[i]);
 	}
 	free(imaginaryNumbersSpace);
 
-	return path;
+	return path[1];
 }

@@ -159,7 +159,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 			return 0;
 		}
 	} else {
-		removeFood(f, head->coord.x, head->coord.y);
+		removeFood(f);
 		addPart(s);
 		status = 2;
 	}

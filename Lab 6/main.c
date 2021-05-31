@@ -137,22 +137,22 @@ void startGame() {
 	Sleep(100);
 }
 
-void printPath(int* path, int path_len) {
-	for (int i = 0; i < path_len; i++) {
-		switch (path[i]) {
-			case UP:
-				printf("U ");
-				break;
-			case DOWN:
-				printf("D ");
-				break;
-			case LEFT:
-				printf("L ");
-				break;
-			case RIGTH:
-				printf("R ");
-				break;
-		}
+void printDirection(int dir) {
+	switch (dir) {
+		case UP:
+			printf("Up   ");
+			break;
+		case DOWN:
+			printf("Down ");
+			break;
+		case LEFT:
+			printf("Left ");
+			break;
+		case RIGTH:
+			printf("Rigth");
+			break;
+		default:
+			printf("None ");
 	}
 	printf("\n");
 }
@@ -187,37 +187,30 @@ void startAutoMode() {
 
 	//игровой цикл
 	while (1) {
-		int* path = calculatePath(&f, &s, getHeadCoord(&s), f.food, &path_len);
-		for (int i = 0; i < path_len; i++) {
-			new_direction = path[i];
+		new_direction = calculatePath(&f, &s, getHeadCoord(&s), f.food);
 
-			snake_direction = getHeadDirection(&s);
-			if (snake_direction + new_direction == 0) {
-				new_direction = NONE;
-			}
-
-			status = moveSnake(&s, &f, new_direction);
-
-			SetConsoleCursorPosition(cli, saved_coord);
-
-			printField(&f);
-			printSnake(&s);
-
-			printf("Score: %d\n", s.length);
-			printPath(path, path_len);
-
-			Sleep(100);
-
-			if (status == 2 || status == 0) {
-				break;
-			}
+		snake_direction = getHeadDirection(&s);
+		if (snake_direction + new_direction == 0) {
+			new_direction = NONE;
 		}
+
+		status = moveSnake(&s, &f, new_direction);
+
+		SetConsoleCursorPosition(cli, saved_coord);
+
+		printField(&f);
+		printSnake(&s);
+
+		printf("Score: %d\n", s.length);
+		printDirection(new_direction);
 
 		if (status == 2) {
 			addFood(&f, &s);
 		} else if (status == 0) {
 			break;
 		}
+
+		Sleep(50);
 	}
 
 	deleteField(&f);
