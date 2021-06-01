@@ -16,7 +16,7 @@ int max_value;
 
 #define WAVE_WALL -5
 
-void printINS(POINT food, POINT head) {
+void printINS(snake *s, POINT food, POINT head) {
 	POINT cli_coord;
 
 	cli_coord.x = 0;
@@ -28,7 +28,11 @@ void printINS(POINT food, POINT head) {
 		for (int j = 1; j < width - 1; j++) {
 			//Выделяем цветом для удобства отладки
 			if (imaginaryNumbersSpace[i][j] == WAVE_WALL) {
-				setColor(FOREGROUND_RED, FOREGROUND_RED);
+				if (existInParts(s, i, j)) {
+					setColor(s->color, s->color);
+				} else {
+					setColor(FOREGROUND_RED, FOREGROUND_RED);
+				}
 			} else if (i == food.x && j == food.y) {
 				setColor(BACKGROUND_GREEN, FOREGROUND_GREEN);
 				printf("42\t");
@@ -162,7 +166,7 @@ int calculatePath(field* f, snake* s, POINT start, POINT finish, int debug) {
 	}
 
 	if(debug != 0)
-		printINS(finish, start);
+		printINS(s, finish, start);
 
 	for (int i = 0; i < height; i++) {
 		free(imaginaryNumbersSpace[i]);

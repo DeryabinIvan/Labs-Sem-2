@@ -30,6 +30,7 @@ void createSnake(snake* s, field* f) {
 	}
 
 	s->parts[s->length - 1].sym = '^';
+	s->color = BACKGROUND_RED | BACKGROUND_GREEN;
 }
 
 void deleteSnake(snake* s) {
@@ -159,7 +160,6 @@ int moveSnake(snake* s, field* f, int new_dir) {
 			return 0;
 		}
 	} else {
-		removeFood(f);
 		addPart(s);
 		status = 2;
 	}
@@ -246,12 +246,24 @@ void printSnake(snake* s) {
 
 	setCursorPosistion(&cli_coord);
 
-	for (int i = 0; i < s->length; i++) {
+	cli_coord.x = s->parts[0].coord.y;
+	cli_coord.y = s->parts[0].coord.x;
+
+	setCursorPosistion(&cli_coord);
+
+	setColor(BACKGROUND_BLUE, FOREGROUND_WHITE);
+	printf("%c", s->parts[0].sym);
+	setColor(0, FOREGROUND_WHITE);
+
+	for (int i = 1; i < s->length; i++) {
 		cli_coord.x = s->parts[i].coord.y;
 		cli_coord.y = s->parts[i].coord.x;
 
 		setCursorPosistion(&cli_coord);
+
+		setColor(s->color, FOREGROUND_WHITE);
 		printf("%c", s->parts[i].sym);
+		setColor(0, FOREGROUND_WHITE);
 	}
 
 	setCursorPosistion(&saved_coord);

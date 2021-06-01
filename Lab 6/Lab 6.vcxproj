@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="cli_graphics.c" />
     <ClCompile Include="field.c" />
+    <ClCompile Include="game.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="neurolink.c" />
     <ClCompile Include="snake.c" />
@@ -148,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="cli_graphics.h" />
     <ClInclude Include="field.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="neurolink.h" />
     <ClInclude Include="snake.h" />
   </ItemGroup>

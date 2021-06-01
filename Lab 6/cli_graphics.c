@@ -27,3 +27,13 @@ void setColor(int background, int foreground) {
 	HANDLE cli = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(cli, background | foreground);
 }
+
+void hideCursor() {
+	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_CURSOR_INFO cursorInfo;
+
+	GetConsoleCursorInfo(out, &cursorInfo);
+	cursorInfo.bVisible = 0;
+	SetConsoleCursorInfo(out, &cursorInfo);
+}

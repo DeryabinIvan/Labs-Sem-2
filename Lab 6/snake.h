@@ -26,6 +26,8 @@ typedef struct sp{
 typedef struct s {
 	int length;
 	snake_part* parts;
+
+	int color;
 } snake;
 
 //создание змейки

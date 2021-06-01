@@ -12,7 +12,7 @@
 
 const int FIELD_BORDER = 1, SAVE_ZONE = 3;
 
-void craeteField(field* f) {
+void createField(field* f, int difficulty) {
 	f->data = (unsigned char**) malloc((f->height + 2 * FIELD_BORDER) * sizeof(unsigned char*));
 	if (f->data == NULL) {
 		exit(-1);
@@ -38,10 +38,11 @@ void craeteField(field* f) {
 	f->data[0][f->width + FIELD_BORDER] = BORDER_DR;
 	f->data[f->height + FIELD_BORDER][f->width + FIELD_BORDER] = BORDER_TR;
 
-	const int max_h = f->height - SAVE_ZONE, max_w = f->width - SAVE_ZONE;
+	const int max_h = f->height - SAVE_ZONE - 1, max_w = f->width - SAVE_ZONE - 1;
 
 	//заполняем поле препятсвиями
-	for (int i = 0; i < (f->height * f->width * 0.02); i++) {
+	//в процентном отношении от площади поля
+	for (int i = 0; i < (f->height * f->width * (difficulty / 100.0)); i++) {
 		f->data[FIELD_BORDER + SAVE_ZONE + rand() % max_h][FIELD_BORDER + SAVE_ZONE + rand() % max_w] = WALL;
 	}
 }

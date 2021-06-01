@@ -32,7 +32,7 @@ enum FIELD_CELLS {
 };
 
 //создать игровое поле
-void craeteField(field* f);
+void createField(field* f, int difficulty);
 
 //удалить игровое поле и очистить память
 void deleteField(field* f);
