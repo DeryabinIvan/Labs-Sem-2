@@ -26,7 +26,7 @@ void printINS(snake *s, POINT food, POINT head) {
 
 	for (int i = 1; i < height - 1; i++) {
 		for (int j = 1; j < width - 1; j++) {
-			//Выделяем цветом для удобства отладки
+			//Р’С‹РґРµР»СЏРµРј С†РІРµС‚РѕРј РґР»СЏ СѓРґРѕР±СЃС‚РІР° РѕС‚Р»Р°РґРєРё
 			if (imaginaryNumbersSpace[i][j] == WAVE_WALL) {
 				if (existInParts(s, i, j)) {
 					setColor(s->color, s->color);
@@ -53,7 +53,7 @@ void printINS(snake *s, POINT food, POINT head) {
 }
 
 void fill_space(int x, int y, int len) {
-	//наткнулись на стену
+	//РЅР°С‚РєРЅСѓР»РёСЃСЊ РЅР° СЃС‚РµРЅСѓ
 	if (imaginaryNumbersSpace[x][y] == WAVE_WALL){
 		return;
 	}
@@ -65,7 +65,7 @@ void fill_space(int x, int y, int len) {
 
 	imaginaryNumbersSpace[x][y] = len;
 
-	//нашли еду
+	//РЅР°С€Р»Рё РµРґСѓ
 	if (imaginaryNumbersSpace[x][y] == -1) {
 		return;
 	}
@@ -115,13 +115,13 @@ int calculatePath(field* f, snake* s, POINT start, POINT finish, int debug) {
 		}
 	}
 
-	//инициализация волнового алгоритма
+	//РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РІРѕР»РЅРѕРІРѕРіРѕ Р°Р»РіРѕСЂРёС‚РјР°
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			if (f->data[i][j] == EMPTY && !existInParts(s, i, j)) {
 				imaginaryNumbersSpace[i][j] = max_value;
 			} else {
-				//стена или часть змейки это недосягаемые области
+				//СЃС‚РµРЅР° РёР»Рё С‡Р°СЃС‚СЊ Р·РјРµР№РєРё СЌС‚Рѕ РЅРµРґРѕСЃСЏРіР°РµРјС‹Рµ РѕР±Р»Р°СЃС‚Рё
 				imaginaryNumbersSpace[i][j] = WAVE_WALL;
 			}
 		}
@@ -129,8 +129,8 @@ int calculatePath(field* f, snake* s, POINT start, POINT finish, int debug) {
 	imaginaryNumbersSpace[finish.x][finish.y] = -1;
 	imaginaryNumbersSpace[start.x][start.y] = 0;
 
-	//начало волнового алгоритма
-	//заполняем поле
+	//РЅР°С‡Р°Р»Рѕ РІРѕР»РЅРѕРІРѕРіРѕ Р°Р»РіРѕСЂРёС‚РјР°
+	//Р·Р°РїРѕР»РЅСЏРµРј РїРѕР»Рµ
 	fill_space(start.x, start.y, 1);
 
 	int x = finish.x, y = finish.y;
@@ -144,7 +144,7 @@ int calculatePath(field* f, snake* s, POINT start, POINT finish, int debug) {
 		exit(-1);
 	}
 
-	//развертка пути от финиша к старту
+	//СЂР°Р·РІРµСЂС‚РєР° РїСѓС‚Рё РѕС‚ С„РёРЅРёС€Р° Рє СЃС‚Р°СЂС‚Сѓ
 	for (int i = 0; i < path_len; i++) {
 		if (imaginaryNumbersSpace[x + 1][y] < imaginaryNumbersSpace[x][y] &&
 			imaginaryNumbersSpace[x + 1][y] != WAVE_WALL) {
@@ -184,7 +184,7 @@ int simpleMove(field* f, snake* s) {
 	int head_dir = s->parts[0].direction;
 	POINT head_coord = s->parts[0].coord;
 
-	//соседние клетки
+	//СЃРѕСЃРµРґРЅРёРµ РєР»РµС‚РєРё
 	int up    = getCellXY(f, head_coord.x-1, head_coord.y),
 		down  = getCellXY(f, head_coord.x+1, head_coord.y),
 		left  = getCellXY(f, head_coord.x, head_coord.y-1),

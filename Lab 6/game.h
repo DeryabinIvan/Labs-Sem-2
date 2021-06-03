@@ -2,14 +2,14 @@
 
 #include <stdlib.h>
 
-//соло режим
+//СЃРѕР»Рѕ СЂРµР¶РёРј
 void startGame(int difficulty);
 
-//автоматический соло режим
+//Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ СЃРѕР»Рѕ СЂРµР¶РёРј
 void startAutoMode(int difficulty, int debug);
 
-//автоматический режим с 2мя змейками
+//Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ СЂРµР¶РёРј СЃ 2РјСЏ Р·РјРµР№РєР°РјРё
 void startAutoMultiplayer(int difficulty);
 
-//выбор сложности
+//РІС‹Р±РѕСЂ СЃР»РѕР¶РЅРѕСЃС‚Рё
 void selectDifficulty(int* diff);

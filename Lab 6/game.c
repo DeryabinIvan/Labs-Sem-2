@@ -46,7 +46,7 @@ int addFood(field* f, snake* s) {
 
 	f->data[food.x][food.y] = FOOD;
 
-	//для поиска пути
+	//РґР»СЏ РїРѕРёСЃРєР° РїСѓС‚Рё
 	f->food = food;
 
 	return 1;
@@ -76,7 +76,7 @@ int addFoodMultiplayer(field* f, snake* s1, snake* s2) {
 
 	f->data[food.x][food.y] = FOOD;
 
-	//для поиска пути
+	//РґР»СЏ РїРѕРёСЃРєР° РїСѓС‚Рё
 	f->food = food;
 
 	return 1;
@@ -143,7 +143,7 @@ void startGame(int difficulty) {
 
 	int status = 1;
 
-	//игровой цикл
+	//РёРіСЂРѕРІРѕР№ С†РёРєР»
 	do {
 		SetConsoleCursorPosition(cli, saved_coord);
 
@@ -202,7 +202,7 @@ void startAutoMode(int difficulty, int debug) {
 	int status = 1;
 	int path_len = 0;
 
-	//игровой цикл
+	//РёРіСЂРѕРІРѕР№ С†РёРєР»
 	while (1) {
 		new_direction = calculatePath(&f, &s, getHeadCoord(&s), f.food, debug);
 		if (new_direction == NONE) {
@@ -258,12 +258,12 @@ void startAutoMultiplayer(int difficulty) {
 	createField(&f, difficulty);
 	createField(&render, 0);
 
-	//назовем наших змеек Эвриала и Сфено
+	//РЅР°Р·РѕРІРµРј РЅР°С€РёС… Р·РјРµРµРє Р­РІСЂРёР°Р»Р° Рё РЎС„РµРЅРѕ
 	snake stheno, euryale;
 	createSnake(&stheno, &f);
 	createSnake(&euryale, &f);
 
-	//для Эвриалы поставим фиолетовый цвет
+	//РґР»СЏ Р­РІСЂРёР°Р»С‹ РїРѕСЃС‚Р°РІРёРј С„РёРѕР»РµС‚РѕРІС‹Р№ С†РІРµС‚
 	euryale.color = BACKGROUND_BLUE | BACKGROUND_RED;
 	for (int i = 0; i < euryale.length; i++) {
 		euryale.parts[i].coord.y = f.width-1;
@@ -285,14 +285,14 @@ void startAutoMultiplayer(int difficulty) {
 
 	int stheno_status = 1, euryale_status = 1;
 
-	//игровой цикл
+	//РёРіСЂРѕРІРѕР№ С†РёРєР»
 	while (1) {
-		//копируем актуальное поле
+		//РєРѕРїРёСЂСѓРµРј Р°РєС‚СѓР°Р»СЊРЅРѕРµ РїРѕР»Рµ
 		for (int i = 0; i < f.height; i++) {
 			memcpy(render.data[i], f.data[i], f.width * sizeof(unsigned char));
 		}
 
-		//"рендерим" змеек на поле
+		//"СЂРµРЅРґРµСЂРёРј" Р·РјРµРµРє РЅР° РїРѕР»Рµ
 		for (int i = 0; i < stheno.length; i++) {
 			render.data[stheno.parts[i].coord.x][stheno.parts[i].coord.y] = WALL;
 		}
@@ -300,8 +300,8 @@ void startAutoMultiplayer(int difficulty) {
 			render.data[euryale.parts[i].coord.x][euryale.parts[i].coord.y] = WALL;
 		}
 
-		//считаем пути для каждой отдельно
-		//причем учитываем положение соперника
+		//СЃС‡РёС‚Р°РµРј РїСѓС‚Рё РґР»СЏ РєР°Р¶РґРѕР№ РѕС‚РґРµР»СЊРЅРѕ
+		//РїСЂРёС‡РµРј СѓС‡РёС‚С‹РІР°РµРј РїРѕР»РѕР¶РµРЅРёРµ СЃРѕРїРµСЂРЅРёРєР°
 		stheno_dir = calculatePath(&render, &stheno, getHeadCoord(&stheno), f.food, 0);
 		euryale_dir = calculatePath(&render, &euryale, getHeadCoord(&euryale), f.food, 0);
 		if (stheno_dir == NONE && euryale_dir == NONE) {
