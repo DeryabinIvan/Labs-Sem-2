@@ -9,6 +9,7 @@ enum DIRECTION { UP = -2, DOWN = 2, NONE = 0, LEFT = 1, RIGTH = -1};
 
 enum SNAKE_PARTS {
 	HEAD = '@',
+	DEAD = 206,
 
 	BODY_U_OR_D = 179,
 	BODY_L_OR_R = 196,

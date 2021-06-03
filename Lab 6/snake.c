@@ -131,6 +131,7 @@ int moveSnake(snake* s, field* f, int new_dir) {
 	//двигаем голову...
 	snake_part* head = s->parts;
 	int current_dir = head->direction;
+	POINT saved_coord = head->coord;
 
 	if (new_dir != NONE) {
 		head->direction = new_dir;
@@ -141,27 +142,30 @@ int moveSnake(snake* s, field* f, int new_dir) {
 	//...и проверяем
 	int cell_type = getCellXY(f, head->coord.x, head->coord.y);
 
-	if (cell_type != FOOD) {
-		//...на пересечения со стеной
-		switch (cell_type) {
-			case BORDER_TL:
-			case BORDER_DL:
-			case BORDER_TR:
-			case BORDER_DR:
-			case BORDER_LEFT_RIGTH:
-			case BORDER_TOP_DOWN:
-			case WALL:
-			case -1:
-				return 0;
-		}
-
-		//...или с собой
-		if (findInterception(s)) {
+	//...на пересечения со стеной
+	switch (cell_type) {
+		case BORDER_TL:
+		case BORDER_DL:
+		case BORDER_TR:
+		case BORDER_DR:
+		case BORDER_LEFT_RIGTH:
+		case BORDER_TOP_DOWN:
+		case WALL:
+		case -1:
+			head->coord = saved_coord;
+			head->sym = DEAD;
 			return 0;
-		}
-	} else {
-		addPart(s);
-		status = 2;
+
+		default:
+			//...или с собой
+			if (findInterception(s)) {
+				head->coord = saved_coord;
+				head->sym = DEAD;
+				return 0;
+			} else if(cell_type == FOOD) {
+				addPart(s);
+				status = 2;
+			}
 	}
 
 	int tmp_dir = NONE;

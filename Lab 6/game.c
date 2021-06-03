@@ -10,7 +10,7 @@
 #include "snake.h"
 #include "neurolink.h"
 
-int getDirection() {
+int getDirectionKey() {
 	if (GetAsyncKeyState(VK_UP) & 1) {
 		return UP;
 	} else if (GetAsyncKeyState(VK_DOWN) & 1) {
@@ -43,6 +43,36 @@ int addFood(field* f, snake* s) {
 		}
 	} while (f->data[food.x][food.y] != EMPTY || existInParts(s, food.x, food.y) ||
 			 (calculatePath(f, s, getHeadCoord(s), food, 0) == NONE));
+
+	f->data[food.x][food.y] = FOOD;
+
+	//для поиска пути
+	f->food = food;
+
+	return 1;
+}
+
+int addFoodMultiplayer(field* f, snake* s1, snake* s2) {
+	POINT food;
+
+	int counter = 0;
+
+	do {
+		food.x = 1 + rand() % f->height;
+		food.y = 1 + rand() % f->width;
+
+		if ((calculatePath(f, s1, getHeadCoord(s1), food, 0) == NONE) ||
+			(calculatePath(f, s2, getHeadCoord(s2), food, 0) == NONE)) {
+			counter++;
+		}
+
+		if (counter == 2000) {
+			return 0;
+		}
+	} while (f->data[food.x][food.y] != EMPTY || 
+			 existInParts(s1, food.x, food.y) ||
+			 existInParts(s2, food.x, food.y)
+			 );
 
 	f->data[food.x][food.y] = FOOD;
 
@@ -122,7 +152,7 @@ void startGame(int difficulty) {
 
 		printf("Score: %d\n", s.length);
 
-		new_direction = getDirection();
+		new_direction = getDirectionKey();
 
 		snake_direction = getHeadDirection(&s);
 		if (checkDirection(snake_direction, new_direction)) {
@@ -215,34 +245,6 @@ void startAutoMode(int difficulty, int debug) {
 	Sleep(100);
 }
 
-int addFoodMultiplayer(field* f, snake* s1, snake* s2) {
-	POINT food;
-
-	int counter = 0;
-
-	do {
-		food.x = 1 + rand() % f->height;
-		food.y = 1 + rand() % f->width;
-
-		counter++;
-		if (counter == 2000) {
-			return 0;
-		}
-	} while (f->data[food.x][food.y] != EMPTY || 
-			 existInParts(s1, food.x, food.y) ||
-			 existInParts(s2, food.x, food.y) ||
-			 (calculatePath(f, s1, getHeadCoord(s1), food, 0) == NONE) ||
-			 (calculatePath(f, s2, getHeadCoord(s2), food, 0) == NONE)
-			 );
-
-	f->data[food.x][food.y] = FOOD;
-
-	//для поиска пути
-	f->food = food;
-
-	return 1;
-}
-
 void startAutoMultiplayer(int difficulty) {
 	srand((unsigned int) time(0));
 
@@ -279,7 +281,7 @@ void startAutoMultiplayer(int difficulty) {
 
 	POINT saved_coord = {0, 0};
 
-	int new_dir_s = NONE, new_dir_e = NONE;
+	int stheno_dir = NONE, euryale_dir = NONE;
 
 	int stheno_status = 1, euryale_status = 1;
 
@@ -300,22 +302,29 @@ void startAutoMultiplayer(int difficulty) {
 
 		//считаем пути для каждой отдельно
 		//причем учитываем положение соперника
-		new_dir_s = calculatePath(&render, &stheno, getHeadCoord(&stheno), f.food, 0);
-		new_dir_e = calculatePath(&render, &euryale, getHeadCoord(&euryale), f.food, 0);
-		if (new_dir_s == NONE || new_dir_e == NONE) {
-			printf("Game over!\n");
+		stheno_dir = calculatePath(&render, &stheno, getHeadCoord(&stheno), f.food, 0);
+		euryale_dir = calculatePath(&render, &euryale, getHeadCoord(&euryale), f.food, 0);
+		if (stheno_dir == NONE && euryale_dir == NONE) {
+			printf("Game over! [Can't find place for food]\n");
 			break;
 		}
 
-		if (checkDirection(getHeadDirection(&stheno), new_dir_s)) {
-			new_dir_s = NONE;
+		if (euryale_dir == NONE) {
+			euryale_dir = simpleMove(&render, &euryale);
 		}
-		if (checkDirection(getHeadDirection(&euryale), new_dir_e)) {
-			new_dir_e = NONE;
+		if (stheno_dir == NONE) {
+			stheno_dir = simpleMove(&render, &stheno);
 		}
 
-		stheno_status = moveSnake(&stheno, &f, new_dir_s);
-		euryale_status = moveSnake(&euryale, &f, new_dir_e);
+		if (checkDirection(getHeadDirection(&stheno), stheno_dir)) {
+			stheno_dir = NONE;
+		}
+		if (checkDirection(getHeadDirection(&euryale), euryale_dir)) {
+			euryale_dir = NONE;
+		}
+
+		stheno_status = moveSnake(&stheno, &f, stheno_dir);
+		euryale_status = moveSnake(&euryale, &f, euryale_dir);
 
 		setCursorPosistion(&saved_coord);
 
@@ -323,7 +332,14 @@ void startAutoMultiplayer(int difficulty) {
 		printSnake(&stheno);
 		printSnake(&euryale);
 
-		printf("Stheno: %d\nEuryale: %d\n", stheno.length, euryale.length);
+		setColor(stheno.color, FOREGROUND_WHITE);
+		printf("Stheno");
+		setColor(0, FOREGROUND_WHITE);
+		printf(": %d\n", stheno.length);
+		setColor(euryale.color, FOREGROUND_WHITE);
+		printf("Euryale");
+		setColor(0, FOREGROUND_WHITE);
+		printf(": %d\n", euryale.length);
 
 		if (stheno_status == 2 || euryale_status == 2) {
 			removeFood(&f);
@@ -344,6 +360,8 @@ void startAutoMultiplayer(int difficulty) {
 	}
 
 	deleteField(&f);
+	deleteField(&render);
+
 	deleteSnake(&stheno);
 	deleteSnake(&euryale);
 

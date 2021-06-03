@@ -175,3 +175,30 @@ int calculatePath(field* f, snake* s, POINT start, POINT finish, int debug) {
 
 	return path[1];
 }
+
+int foodOrEmpty(int cell_type) {
+	return cell_type == FOOD || cell_type == EMPTY;
+}
+
+int simpleMove(field* f, snake* s) {
+	int head_dir = s->parts[0].direction;
+	POINT head_coord = s->parts[0].coord;
+
+	//соседние клетки
+	int up    = getCellXY(f, head_coord.x-1, head_coord.y),
+		down  = getCellXY(f, head_coord.x+1, head_coord.y),
+		left  = getCellXY(f, head_coord.x, head_coord.y-1),
+		rigth = getCellXY(f, head_coord.x, head_coord.y+1);
+
+	if (foodOrEmpty(up)) {
+		return UP;
+	} else if (foodOrEmpty(left)) {
+		return LEFT;
+	} else if (foodOrEmpty(down)) {
+		return DOWN;
+	} else if (foodOrEmpty(rigth)) {
+		return RIGTH;
+	}
+
+	return NONE;
+}
