@@ -82,6 +82,36 @@ int addFoodMultiplayer(field* f, snake* s1, snake* s2) {
 	return 1;
 }
 
+void clearSnakePlace(snake* s) {
+	POINT saved_coord = getCursorPosistion(), sp_coord;
+
+	setColor(0, FOREGROUND_WHITE);
+	for (int i = 0; i < s->length; i++) {
+		sp_coord.x = s->parts[i].coord.y;
+		sp_coord.y = s->parts[i].coord.x;
+
+		setCursorPosistion(&sp_coord);
+
+		printf("%c", EMPTY);
+	}
+
+	setCursorPosistion(&saved_coord);
+}
+
+void printFood(POINT coord) {
+	POINT saved_coord = getCursorPosistion(), cli_coord;
+
+	cli_coord.x = coord.y;
+	cli_coord.y = coord.x;
+
+	setColor(0, FOREGROUND_GREEN);
+	setCursorPosistion(&cli_coord);
+	printf("%c", FOOD);
+
+	setColor(0, FOREGROUND_WHITE);
+	setCursorPosistion(&saved_coord);
+}
+
 void printDirection(int dir) {
 	switch (dir) {
 		case UP:
@@ -134,10 +164,7 @@ void startGame(int difficulty) {
 	printSnake(&s);
 
 	HANDLE cli = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD saved_coord;
-
-	saved_coord.X = 0;
-	saved_coord.Y = 0;
+	POINT saved_coord = {0, 0}, score_coord = {0, f.height+2};
 
 	int new_direction = NONE, snake_direction = NONE;
 
@@ -145,11 +172,12 @@ void startGame(int difficulty) {
 
 	//игровой цикл
 	do {
-		SetConsoleCursorPosition(cli, saved_coord);
+		getCursorPosistion(&saved_coord);
 
-		printField(&f);
+		//printField(&f);
 		printSnake(&s);
 
+		setCursorPosistion(&score_coord);
 		printf("Score: %d\n", s.length);
 
 		new_direction = getDirectionKey();
@@ -165,9 +193,12 @@ void startGame(int difficulty) {
 				printf("Game over!\n");
 				break;
 			}
+			printFood(f.food);
 		}
 
 		Sleep(100);
+
+		clearSnakePlace(&s);
 	} while (status = moveSnake(&s, &f, new_direction));
 
 	deleteField(&f);
@@ -192,10 +223,7 @@ void startAutoMode(int difficulty, int debug) {
 	printSnake(&s);
 
 	HANDLE cli = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD saved_coord;
-
-	saved_coord.X = 0;
-	saved_coord.Y = 0;
+	POINT saved_coord = {0, 0}, score_coord = {0, f.height + 2};
 
 	int new_direction = NONE, snake_direction = NONE;
 
@@ -216,13 +244,16 @@ void startAutoMode(int difficulty, int debug) {
 			new_direction = NONE;
 		}
 
+		clearSnakePlace(&s);
+
 		status = moveSnake(&s, &f, new_direction);
 
-		SetConsoleCursorPosition(cli, saved_coord);
+		setCursorPosistion(&saved_coord);
 
-		printField(&f);
+		//printField(&f);
 		printSnake(&s);
 
+		setCursorPosistion(&score_coord);
 		printf("Score: %d\n", s.length);
 		printDirection(new_direction);
 
@@ -232,6 +263,7 @@ void startAutoMode(int difficulty, int debug) {
 				printf("Game over!\n");
 				break;
 			}
+			printFood(f.food);
 		} else if (status == 0) {
 			break;
 		}
@@ -279,7 +311,8 @@ void startAutoMultiplayer(int difficulty) {
 	printSnake(&stheno);
 	printSnake(&euryale);
 
-	POINT saved_coord = {0, 0};
+	POINT saved_coord = {0, 0},
+		  score_coord = {0, f.height+2};
 
 	int stheno_dir = NONE, euryale_dir = NONE;
 
@@ -323,15 +356,19 @@ void startAutoMultiplayer(int difficulty) {
 			euryale_dir = NONE;
 		}
 
+		clearSnakePlace(&stheno);
+		clearSnakePlace(&euryale);
+
 		stheno_status = moveSnake(&stheno, &f, stheno_dir);
 		euryale_status = moveSnake(&euryale, &f, euryale_dir);
 
 		setCursorPosistion(&saved_coord);
 
-		printField(&f);
+		//printField(&f);
 		printSnake(&stheno);
 		printSnake(&euryale);
 
+		setCursorPosistion(&score_coord);
 		setColor(stheno.color, FOREGROUND_WHITE);
 		printf("Stheno");
 		setColor(0, FOREGROUND_WHITE);
@@ -347,6 +384,7 @@ void startAutoMultiplayer(int difficulty) {
 				printf("Game over!\n");
 				break;
 			}
+			printFood(f.food);
 		} else if (stheno_status == 0 || euryale_status == 0) {
 			break;
 		}
