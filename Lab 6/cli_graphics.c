@@ -37,3 +37,13 @@ void hideCursor() {
 	cursorInfo.bVisible = 0;
 	SetConsoleCursorInfo(out, &cursorInfo);
 }
+
+void showCursor() {
+	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_CURSOR_INFO cursorInfo;
+
+	GetConsoleCursorInfo(out, &cursorInfo);
+	cursorInfo.bVisible = 1;
+	SetConsoleCursorInfo(out, &cursorInfo);
+}

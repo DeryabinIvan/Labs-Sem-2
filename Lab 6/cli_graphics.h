@@ -13,3 +13,5 @@ POINT getCursorPosistion();
 void setColor(int background, int foreground);
 
 void hideCursor();
+
+void showCursor();

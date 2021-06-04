@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "game.h"
+#include "cli_graphics.h"
 
 enum MENU{START=1, AUTO, AUTO_DEBUG, AUTO_MULTIPLAYER, HELP, EXIT};
 
@@ -13,7 +14,7 @@ int main() {
 				\n\t%d) Solo\
 				\n\t%d) Auto mode\
 				\n\t%d) Auto with debug information\
-				\n\t   (use fullscreen for best results) \
+				\n\t   (use fullscreen for best results)\
 				\n\t%d) Auto mode with 2 snek\
 				\n\t%d) Help\
 				\n\t%d) Exit\n", 
@@ -27,24 +28,28 @@ int main() {
 				selectDifficulty(&difficulty);
 				hideCursor();
 				startGame(difficulty);
+				showCursor();
 				break;
 
 			case AUTO:
 				selectDifficulty(&difficulty);
 				hideCursor();
 				startAutoMode(difficulty, 0);
+				showCursor();
 				break;
 
 			case AUTO_DEBUG:
 				selectDifficulty(&difficulty);
 				hideCursor();
 				startAutoMode(difficulty, 1);
+				showCursor();
 				break;
 
 			case AUTO_MULTIPLAYER:
 				selectDifficulty(&difficulty);
 				hideCursor();
 				startAutoMultiplayer(difficulty);
+				showCursor();
 				break;
 
 			case HELP:
